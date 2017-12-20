@@ -142,4 +142,11 @@ public class VideoFile implements DownFile {
 		
 	}
 
+
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

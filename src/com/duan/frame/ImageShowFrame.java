@@ -85,9 +85,8 @@ public class ImageShowFrame extends MyFrame  {
 	 * 
 	 * @param image
 	 */
-	public ImageShowFrame(List<DownFile> finishedFiles) {
-		this.file=finishedFiles.get(finishedFiles.size()-1);
-		image = new ImageIcon(file.getPath()).getImage();		
+	public ImageShowFrame(List<String> finishedFilesPath) {
+		image = new ImageIcon(finishedFilesPath.get(finishedFilesPath.size()-1)).getImage();		
 		setSize(image);
 		isOpen = true;
 		setCenterLoaction();
@@ -107,14 +106,14 @@ public class ImageShowFrame extends MyFrame  {
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				int number = finishedFiles.indexOf(getFile());
+				int number = finishedFilesPath.indexOf(getFile());
 				int sfWidth = getWidth();
 				int mouseX = e.getX();
-				if (mouseX >= sfWidth / 2 && number < finishedFiles.size() - 1) {
-					DownFile nextfile = finishedFiles.get(number + 1);
-					refresh(nextfile);
+				if (mouseX >= sfWidth / 2 && number < finishedFilesPath.size() - 1) {
+					String nextfilePath = finishedFilesPath.get(number + 1);
+					refresh(nextfilePath);
 				} else if (mouseX <= sfWidth / 2 && number > 0) {
-					DownFile lastfile = finishedFiles.get(number - 1);
+					String lastfile = finishedFilesPath.get(number - 1);
 					refresh(lastfile);
 				}
 			}
@@ -123,17 +122,17 @@ public class ImageShowFrame extends MyFrame  {
 		addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				int number = finishedFiles.indexOf(getFile());
+				int number = finishedFilesPath.indexOf(getFile());
 				if (e.getKeyCode() == KeyEvent.VK_RIGHT
-						&& number < finishedFiles.size() - 1) {
-					DownFile nextfile = finishedFiles.get(number + 1);
+						&& number < finishedFilesPath.size() - 1) {
+					String nextfile = finishedFilesPath.get(number + 1);
 					refresh(nextfile);
 				} else if (e.getKeyCode() == KeyEvent.VK_LEFT && number > 0) {
-					DownFile lastfile = finishedFiles.get(number - 1);
+					String lastfile = finishedFilesPath.get(number - 1);
 					refresh(lastfile);
 				} else if (e.getKeyCode() == KeyEvent.VK_SPACE
-						&& number < finishedFiles.size() - 1) {
-					DownFile nextfile = finishedFiles.get(number + 1);
+						&& number < finishedFilesPath.size() - 1) {
+					String nextfile = finishedFilesPath.get(number + 1);
 					refresh(nextfile);
 				}
 			}

@@ -138,5 +138,13 @@ public class ImageFile implements DownFile {
 	public void setContentType(String contentType) {
 		this.contentType = contentType;
 	}
+
+
+	@Override
+	public void clear() {
+		url=null;
+		con=null;
+		file=null;
+	}
 	
 }

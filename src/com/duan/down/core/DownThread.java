@@ -1,6 +1,7 @@
 package com.duan.down.core;
 
 import java.net.URL;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -29,7 +30,8 @@ public class DownThread implements Runnable {
 	private String fileName;
 	private String savePath;
 	private URL url;
-	private ChildPage childPage;	
+	private ChildPage childPage;
+	private List<String> fininshFilesPath;
 
 	/**
 	 * 手动添加下载的构造器
@@ -54,6 +56,7 @@ public class DownThread implements Runnable {
 		this.mainFrame = mainFrame;
 		this.childPage = childPage;
 		savePath = mainFrame.getSavePath();
+		fininshFilesPath = mainFrame.getFinishedFilesPath();
 	}
 
 	/**
@@ -104,7 +107,8 @@ public class DownThread implements Runnable {
 			}
 			downBar.setProgressColor(Constant.FINISHI_COLOR);
 			begButton.setEnabled(false);
-			mainFrame.getFinishedFiles().add(file);
+			String path = file.getPath();			
+			fininshFilesPath.add(path);
 			Thread.sleep(200);
 			mainFrame.getTaskJPanel().removeDownThread(this);
 		} catch (InterruptedException e) {

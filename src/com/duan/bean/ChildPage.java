@@ -13,6 +13,11 @@ import com.duan.intface.DownFile;
 import com.duan.intface.Parse;
 import com.duan.parent.RButton;
 
+/**
+ * 
+ * @author Administrator
+ *
+ */
 public class ChildPage {
 
 	private String title;
@@ -35,13 +40,12 @@ public class ChildPage {
 		this.downFilesPath = downFilesPath;
 	}
 
-	public ChildPage(String title, String url, String showImg, int pageNumber,
-			int pageIndex) {
+	public ChildPage(String title, String url, String showImg, int pageNumber, int pageIndex) {
 		this.title = title;
 		this.url = url;
 		this.pageNumber = pageNumber;
 		this.pageIndex = pageIndex;
-		imgUrlPaths=new ArrayList<String>();
+		imgUrlPaths = new ArrayList<String>();
 		downFilesPath = new ArrayList<String>();
 		setPreviewImgUrl(showImg);
 	}
@@ -100,7 +104,7 @@ public class ChildPage {
 		if (imgUrlPaths != null) {
 			setTaskNumber(imgUrlPaths.size());
 		}
-	}	
+	}
 
 	public JButton getDownButton() {
 		if (downButton == null) {
@@ -144,8 +148,8 @@ public class ChildPage {
 		downFilesPath.add(downFile.getPath());
 		finishNumber++;
 		showTaskProgress();
-	}	
-	
+	}
+
 	public String getPreviewImagePath() {
 		return previewImagePath;
 	}
@@ -154,39 +158,38 @@ public class ChildPage {
 		this.previewImagePath = previewImagePath;
 	}
 
-	public void downChildPage(Parse parse, MainFrame mainFrame) {		
+	public void downChildPage(Parse parse, MainFrame mainFrame) {
 		if (downButton.getText().equals("下载")) {
 			if (getUrl() == null) {
 				return;
 			}
 			// 获得paths
-			if(imgUrlPaths.size()==0){		
+			if (imgUrlPaths.size() == 0) {
 				URL url;
 				try {
 					url = new URL(getUrl());
 					setImgUrlPaths(parse.getPathsFromUrl(url));
-				} catch (MalformedURLException e) {					
-					mainFrame.getTaskJPanel().getMsgArea().append(getUrl()+"：子贴URL错误！\r\n");
+				} catch (MalformedURLException e) {
+					mainFrame.getTaskJPanel().getMsgArea().append(getUrl() + "：子贴URL错误！\r\n");
 				}
-			}else {
+			} else {
 				setImgUrlPaths(imgUrlPaths);
 			}
 			if (imgUrlPaths != null) {
 				// 将下载url及子页添加到待下载队列中
-				Map<URL, ChildPage> waitMap = mainFrame
-						.getWaitDownLoadChildPage();
+				Map<URL, ChildPage> waitMap = mainFrame.getWaitDownLoadChildPage();
 				for (String url : imgUrlPaths) {
 					// 若添加成功，则返回null
 					if (!waitMap.containsKey(url)) {
 						URL u;
 						try {
-							u = new URL(url);							
+							u = new URL(url);
 							waitMap.put(u, this);
 							mainFrame.getWaitDownLoadUrls().add(u);
 							mainFrame.addTaskNumber(1);
 							mainFrame.getTaskJPanel().notifyDownAdd();
 						} catch (MalformedURLException e) {
-							mainFrame.getTaskJPanel().getMsgArea().append(url+"：图片URL错误！\r\n");
+							mainFrame.getTaskJPanel().getMsgArea().append(url + "：图片URL错误！\r\n");
 							giveUpTask();
 						}
 					} else {

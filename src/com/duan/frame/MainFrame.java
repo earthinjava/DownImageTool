@@ -18,7 +18,6 @@ import com.duan.frame.panel.InputPanel;
 import com.duan.frame.panel.OptionMenu;
 import com.duan.frame.panel.TaskPanel;
 import com.duan.frame.panel.UrlSearchPanel;
-import com.duan.intface.DownFile;
 import com.duan.parent.PageFrame;
 import com.duan.utils.Constant;
 
@@ -36,14 +35,14 @@ public class MainFrame extends JFrame {
 	private Map< URL,ChildPage> waitDownLoadChildPage;
 	private List<URL> waitDownLoadUrls;
 	private int taskNumber;
-	private List<DownFile> finishedFiles;
+	private List<String> finishedFilesPath;
 	private String savePath;
 	private boolean uPanelIsHide;
 
 	public MainFrame() {
 		setLayout(null);
 		savePath = Constant.SAVE_PATH;
-		finishedFiles = new CopyOnWriteArrayList<DownFile>();
+		finishedFilesPath = new CopyOnWriteArrayList<String>();
 		setWaitDownLoadChildPage(new HashMap< URL,ChildPage>());
 		setWaitDownLoadUrls(new CopyOnWriteArrayList<URL>());
 		optionMenu = new OptionMenu(this);
@@ -202,12 +201,12 @@ public class MainFrame extends JFrame {
 		this.taskNumber = taskNumber;
 	}
 
-	public List<DownFile> getFinishedFiles() {
-		return finishedFiles;
+	public List<String> getFinishedFilesPath() {
+		return finishedFilesPath;
 	}
 
-	public void setFinishedFiles(List<DownFile> finishedFiles) {
-		this.finishedFiles = finishedFiles;
+	public void setFinishedFilesPath(List<String> finishedFilesPath) {
+		this.finishedFilesPath = finishedFilesPath;
 	}
 
 	public String getSavePath() {
@@ -226,14 +225,14 @@ public class MainFrame extends JFrame {
 
 	public double getProgress() {
 		if (taskNumber != 0) {
-			return (double) finishedFiles.size() / (double) taskNumber;
+			return (double) finishedFilesPath.size() / (double) taskNumber;
 		} else {
 			return 0;
 		}
 	}
 
 	public boolean isFinishDown() {
-		if (finishedFiles.size() != 0 && finishedFiles.size() == taskNumber) {
+		if (finishedFilesPath.size() != 0 && finishedFilesPath.size() == taskNumber) {
 			return true;
 		}
 		return false;

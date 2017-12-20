@@ -12,20 +12,19 @@ import javax.swing.JPanel;
 
 import com.duan.frame.ImageShowFrame;
 import com.duan.frame.MainFrame;
-import com.duan.intface.DownFile;
 
 public class FishPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	// 下载完的列表
-	private List<DownFile> finishFiles;
+	private List<String> finishFilesPath;
 	// 预览窗口图片
 	private Image showPanelimage;
 	// 预览窗口
 	private ImageShowFrame isf;
 
 	public FishPanel(MainFrame mainFrame) {
-		finishFiles = mainFrame.getFinishedFiles();
+		finishFilesPath = mainFrame.getFinishedFilesPath();
 		setBackground(Color.WHITE);
 		setSize(400, 290);
 		// 鼠标单击打开关闭预览窗口事件
@@ -34,7 +33,7 @@ public class FishPanel extends JPanel {
 			public void mouseClicked(MouseEvent e) {
 				if (showPanelimage != null) {
 					if (isf == null) {						
-						isf = new ImageShowFrame(finishFiles);
+						isf = new ImageShowFrame(finishFilesPath);
 					} else {
 						isf.dispose();
 						isf = null;
@@ -47,8 +46,8 @@ public class FishPanel extends JPanel {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		if (finishFiles.size() != 0) {
-			showPanelimage = new ImageIcon(finishFiles.get(finishFiles.size() - 1).getPath())
+		if (finishFilesPath.size() != 0) {
+			showPanelimage = new ImageIcon(finishFilesPath.get(finishFilesPath.size() - 1))
 					.getImage();
 		}
 		if (showPanelimage != null) {

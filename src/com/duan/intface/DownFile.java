@@ -36,7 +36,7 @@ public interface DownFile {
 	public void creatNewFile() throws IOException;	
 	public String getSizeKB();
 
-
+	public void clear();
 
 	void getNewName();
 

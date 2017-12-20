@@ -58,20 +58,21 @@ public class ImageDownLoad implements DownLoad {
 					}
 				}
 				if (downLength < fileLength || downLength == 0) {
-					if (file != null && file.getFile() != null
-							&& file.getFile().getName() != null) {
-						msgArea.append(file.getFile().getName() + "文件未下载完\r\n");
+					if (file != null && file.getName() != null) {
+						msgArea.append(file.getName() + "下载失败！\r\n");
 					}
 					return false;
 				} else {
-					if (file != null && file.getFile() != null
-							&& file.getFile().getName() != null) {
-						msgArea.append(file.getFile().getName() + "下载完成\r\n");
+					if (file != null && file.getName() != null) {
+						msgArea.append(file.getName() + "下载完成！\r\n");
 					}
+					file.clear();
 					return true;
 				}
 			} catch (IOException e) {
-				msgArea.append(file.getName() + "进行第" + i + "次尝试！\r\n");
+				if (file != null && file.getName() != null) {
+					msgArea.append(file.getName() + "尝试第" + i + "次连接！\r\n");
+				}
 				i++;
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -80,6 +81,7 @@ public class ImageDownLoad implements DownLoad {
 			}
 		}
 		msgArea.append(file.getName() + "下载失败！\r\n");
+		file=null;
 		return false;
 	}
 

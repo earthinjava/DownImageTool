@@ -100,7 +100,7 @@ public class UrlSearchPanel extends JPanel {
 		} 
 		totalDownBar.setProgress(mainFrame.getProgress());
 		totalDownBar.drawProgress(g, false, mainFrame.getTaskNumber(),
-				mainFrame.getFinishedFiles().size());
+				mainFrame.getFinishedFilesPath().size());
 		if (mainFrame.getWaitDownLoadUrls().size() != 0) {
 			if (fistwaitDownLoadUrls != mainFrame.getWaitDownLoadUrls().get(0)) {
 				fistwaitDownLoadUrls = mainFrame.getWaitDownLoadUrls().get(0);
