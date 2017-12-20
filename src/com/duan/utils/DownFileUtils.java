@@ -1,4 +1,4 @@
-package com.duan.core;
+package com.duan.utils;
 
 import java.net.URL;
 import java.net.URLConnection;
@@ -6,9 +6,8 @@ import java.net.URLConnection;
 import com.duan.bean.ImageFile;
 import com.duan.bean.VideoFile;
 import com.duan.intface.DownFile;
-import com.duan.utils.UrlConn;
 
-public class FileParse {
+public class DownFileUtils {
 
 	public static DownFile getDownFile(String name, String path, URL url) {
 		DownFile downFile;

@@ -1,4 +1,4 @@
-package com.duan.frame;
+package com.duan.frame.panel;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -20,9 +20,10 @@ import javax.swing.event.DocumentListener;
 
 import com.duan.bean.ChildPage;
 import com.duan.bean.DownBar;
-import com.duan.core.DownThread;
+import com.duan.down.core.DownThread;
+import com.duan.frame.MainFrame;
+import com.duan.parent.RButton;
 import com.duan.utils.Constant;
-import com.duan.utils.RButton;
 import com.duan.utils.UUIDutils;
 
 public class TaskPanel extends JPanel {

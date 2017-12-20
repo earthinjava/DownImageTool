@@ -8,11 +8,10 @@ import java.util.Map;
 
 import javax.swing.JButton;
 
-import com.duan.core.UrlParse;
 import com.duan.frame.MainFrame;
 import com.duan.intface.DownFile;
 import com.duan.intface.Parse;
-import com.duan.utils.RButton;
+import com.duan.parent.RButton;
 
 public class ChildPage {
 
@@ -22,18 +21,18 @@ public class ChildPage {
 	private int pageNumber;
 	private int pageIndex;
 	private String previewImagePath;
-	private List<URL> imgPaths;
+	private List<String> imgUrlPaths;
 	private JButton downButton;
-	private List<DownFile> downFiles;
+	private List<String> downFilesPath;
 	private int finishNumber;
 	private int taskNumber;
 
-	public List<DownFile> getDownFiles() {
-		return downFiles;
+	public List<String> getDownFilesPath() {
+		return downFilesPath;
 	}
 
-	public void setDownFiles(List<DownFile> downFiles) {
-		this.downFiles = downFiles;
+	public void setDownFilesPath(List<String> downFilesPath) {
+		this.downFilesPath = downFilesPath;
 	}
 
 	public ChildPage(String title, String url, String showImg, int pageNumber,
@@ -42,32 +41,9 @@ public class ChildPage {
 		this.url = url;
 		this.pageNumber = pageNumber;
 		this.pageIndex = pageIndex;
-		downFiles = new ArrayList<DownFile>();
+		imgUrlPaths=new ArrayList<String>();
+		downFilesPath = new ArrayList<String>();
 		setPreviewImgUrl(showImg);
-	}
-
-	public ChildPage(String title, String url, String showImg, int pageNumber,
-			int pageIndex, List<String> imgPaths) {
-		this.title = title;
-		this.url = url;
-		this.pageNumber = pageNumber;
-		this.pageIndex = pageIndex;
-		downFiles = new ArrayList<DownFile>();
-		setPreviewImgUrl(showImg);
-		this.imgPaths = new ArrayList<URL>();
-		System.out.println(this.title);
-		System.out.println(this.url);
-		if (imgPaths != null && imgPaths.size() != 0) {
-			for (String path : imgPaths) {
-				try {
-					URL u = new URL(path);
-					this.imgPaths.add(u);
-					System.out.println(u);
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-				}
-			}
-		}
 	}
 
 	public ChildPage(String title, String url) {
@@ -115,16 +91,16 @@ public class ChildPage {
 		this.pageIndex = pageIndex;
 	}
 
-	public List<URL> getImgPaths() {
-		return imgPaths;
+	public List<String> getImgUrlPaths() {
+		return imgUrlPaths;
 	}
 
-	public void setImgPaths(List<URL> imgPaths) {
-		this.imgPaths = imgPaths;
-		if (imgPaths != null) {
-			setTaskNumber(imgPaths.size());
+	public void setImgUrlPaths(List<String> imgUrlPaths) {
+		this.imgUrlPaths = imgUrlPaths;
+		if (imgUrlPaths != null) {
+			setTaskNumber(imgUrlPaths.size());
 		}
-	}
+	}	
 
 	public JButton getDownButton() {
 		if (downButton == null) {
@@ -165,11 +141,11 @@ public class ChildPage {
 	}
 
 	public synchronized void finishTask(DownFile downFile) {
-		downFiles.add(downFile);
+		downFilesPath.add(downFile.getPath());
 		finishNumber++;
 		showTaskProgress();
-	}
-
+	}	
+	
 	public String getPreviewImagePath() {
 		return previewImagePath;
 	}
@@ -184,27 +160,40 @@ public class ChildPage {
 				return;
 			}
 			// 获得paths
-			if(imgPaths.size()==0){				
-				setImgPaths(new UrlParse(parse).getPathsFromUrl(getUrl()));
+			if(imgUrlPaths.size()==0){		
+				URL url;
+				try {
+					url = new URL(getUrl());
+					setImgUrlPaths(parse.getPathsFromUrl(url));
+				} catch (MalformedURLException e) {					
+					mainFrame.getTaskJPanel().getMsgArea().append(getUrl()+"：子贴URL错误！\r\n");
+				}
 			}else {
-				setImgPaths(imgPaths);
+				setImgUrlPaths(imgUrlPaths);
 			}
-			if (imgPaths != null) {
+			if (imgUrlPaths != null) {
 				// 将下载url及子页添加到待下载队列中
 				Map<URL, ChildPage> waitMap = mainFrame
 						.getWaitDownLoadChildPage();
-				for (URL url : imgPaths) {
+				for (String url : imgUrlPaths) {
 					// 若添加成功，则返回null
 					if (!waitMap.containsKey(url)) {
-						waitMap.put(url, this);
-						mainFrame.getWaitDownLoadUrls().add(url);
-						mainFrame.addTaskNumber(1);
-						mainFrame.getTaskJPanel().notifyDownAdd();
+						URL u;
+						try {
+							u = new URL(url);							
+							waitMap.put(u, this);
+							mainFrame.getWaitDownLoadUrls().add(u);
+							mainFrame.addTaskNumber(1);
+							mainFrame.getTaskJPanel().notifyDownAdd();
+						} catch (MalformedURLException e) {
+							mainFrame.getTaskJPanel().getMsgArea().append(url+"：图片URL错误！\r\n");
+							giveUpTask();
+						}
 					} else {
 						giveUpTask();
 					}
 				}
-				downButton.setText("等待" + imgPaths.size());
+				downButton.setText("等待" + imgUrlPaths.size());
 				downButton.setEnabled(false);
 			} else {
 				mainFrame.getTaskJPanel().getMsgArea().append("无法解析到资源路径！\r\n");

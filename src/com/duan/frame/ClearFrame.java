@@ -18,9 +18,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.duan.bean.DownBar;
+import com.duan.down.core.ImageScanner;
+import com.duan.parent.RButton;
 import com.duan.utils.Constant;
-import com.duan.utils.ImageScanner;
-import com.duan.utils.RButton;
 
 public class ClearFrame extends JFrame {
 
@@ -89,8 +89,7 @@ public class ClearFrame extends JFrame {
 						public void run() {
 							imageScanner.delFiles(downBar);
 						}
-					}).start();
-					imageScanner.delFiles(downBar);
+					}).start();					
 					scanButton.setEnabled(false);
 				}
 			}

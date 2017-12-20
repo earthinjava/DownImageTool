@@ -5,4 +5,4 @@
  * @author Administrator
  *
  */
-package com.duan.core;
+package com.duan.down.downloader;

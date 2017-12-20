@@ -14,16 +14,14 @@ import java.awt.event.WindowEvent;
 import java.util.List;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 
 import com.duan.intface.DownFile;
-import com.duan.intface.FrameListener;
+import com.duan.parent.MyFrame;
 import com.duan.utils.Constant;
-import com.duan.utils.MyFrame;
 
-public class ImageShowFrame extends MyFrame implements FrameListener {
+public class ImageShowFrame extends MyFrame  {
 
 	private static final long serialVersionUID = -1130457258995441174L;
 	private int width;
@@ -41,7 +39,7 @@ public class ImageShowFrame extends MyFrame implements FrameListener {
 	 * 
 	 * @param image
 	 */
-	public ImageShowFrame( Image img,List<DownFile> finishedFiles) {	
+	public ImageShowFrame(Image img,List<String> finishedFilesPath) {	
 		showImage=img;
 		image = img;		
 		setSize(image);
@@ -63,26 +61,24 @@ public class ImageShowFrame extends MyFrame implements FrameListener {
 		addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				int number = finishedFiles.indexOf(getFile());
+				int number = finishedFilesPath.indexOf(getFile());
 				if (e.getKeyCode() == KeyEvent.VK_RIGHT
-						&& number < finishedFiles.size() - 1) {
-					DownFile nextfile = finishedFiles.get(number + 1);					
-					refresh(nextfile);
+						&& number < finishedFilesPath.size() - 1) {
+					String imgPath=finishedFilesPath.get(number + 1);					
+					refresh(imgPath);
 				} else if (e.getKeyCode() == KeyEvent.VK_LEFT && number > 0) {
-					DownFile lastfile = finishedFiles.get(number - 1);
-					refresh(lastfile);
+					String imgPath = finishedFilesPath.get(number - 1);
+					refresh(imgPath);
 				} else if (e.getKeyCode() == KeyEvent.VK_SPACE
-						&& number < finishedFiles.size() - 1) {
-					DownFile nextfile = finishedFiles.get(number + 1);
-					refresh(nextfile);
+						&& number < finishedFilesPath.size() - 1) {
+					String imgPath=finishedFilesPath.get(number + 1);
+					refresh(imgPath);
 				}else if (e.getKeyCode() == KeyEvent.VK_LEFT && number == 0) {					
 					refresh(showImage);
 				}
 			}
 		});
 	}
-		
-	
 	
 	/**
 	 * 预览窗口的对象构造
@@ -167,69 +163,7 @@ public class ImageShowFrame extends MyFrame implements FrameListener {
 				isOpen = false;
 			}
 		});
-	}
-
-	/**
-	 * 按钮打开的窗口对象构造
-	 * 
-	 * @param file
-	 * @param openButton
-	 */
-	public ImageShowFrame(DownFile file,  List<DownFile> finishedFiles,JButton openButton) {		
-		image = new ImageIcon(file.getPath()).getImage();
-		setSize(image);
-		isOpen = true;
-		setCenterLoaction();
-		Container con = this.getContentPane();
-		showJPanel = new ImagePanel();
-		con.add(showJPanel);
-		setResizable(false);
-		setVisible(true);
-		openButton.setBackground(Constant.FINISHI_COLOR);
-		this.setFile(file);
-		setTitle(file.getName() + "   " + file.getTime() + "   " + file.getSizeKB());
-		addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				setOpen(false);
-				openButton.setText("打开");
-			}
-		});
-		addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				int number = finishedFiles.indexOf(getFile());
-				int sfWidth = getWidth();
-				int mouseX = e.getX();
-				if (mouseX >= sfWidth / 2 && number < finishedFiles.size() - 1) {
-					DownFile nextfile = finishedFiles.get(number + 1);
-					refresh(nextfile);
-				} else if (mouseX <= sfWidth / 2 && number > 0) {
-					DownFile lastfile = finishedFiles.get(number - 1);
-					refresh(lastfile);
-				}
-			}
-
-		});
-		addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				int number = finishedFiles.indexOf(getFile());
-				if (e.getKeyCode() == KeyEvent.VK_RIGHT
-						&& number < finishedFiles.size() - 1) {
-					DownFile nextfile = finishedFiles.get(number + 1);
-					refresh(nextfile);
-				} else if (e.getKeyCode() == KeyEvent.VK_LEFT && number > 0) {
-					DownFile lastfile = finishedFiles.get(number - 1);
-					refresh(lastfile);
-				} else if (e.getKeyCode() == KeyEvent.VK_SPACE
-						&& number < finishedFiles.size() - 1) {
-					DownFile nextfile = finishedFiles.get(number + 1);
-					refresh(nextfile);
-				}
-			}
-		});
-		
-	}
+	}	
 
 	/**
 	 * 根据图片文件设置窗口大小
@@ -319,6 +253,14 @@ public class ImageShowFrame extends MyFrame implements FrameListener {
 		setCenterLoaction();
 		repaint();
 	}
+	
+	public void refresh(String imgPath) {		
+		image = new ImageIcon(imgPath).getImage();
+		setSize(image);
+		setCenterLoaction();
+		repaint();
+	}
+	
 	public void refresh(Image img) {
 		setSize(showImage);
 		image =showImage;

@@ -1,4 +1,4 @@
-package com.duan.frame;
+package com.duan.parent;
 
 import java.awt.Container;
 import java.awt.event.ActionEvent;
@@ -20,10 +20,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.duan.bean.Page;
-import com.duan.core.UrlParse;
+import com.duan.factory.UrlParseFactory;
+import com.duan.frame.MainFrame;
 import com.duan.intface.Parse;
-import com.duan.utils.MyFrame;
-import com.duan.utils.RButton;
 
 public class PageFrame extends MyFrame {
 	private static final long serialVersionUID = 1L;
@@ -36,12 +35,16 @@ public class PageFrame extends MyFrame {
 	private JPanel buttonPanel;
 	private Page nowPage;
 
+	public PageFrame() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public PageFrame(MainFrame mainFrame) {
 		this.mainFrame = mainFrame;
 		isNumber = true;
 		pages = new HashMap<Integer, Page>();
 		childJPanels = new ArrayList<JPanel>();
-		this.parse = UrlParse.getParse(mainFrame.getuPanel().getParseName());
+		this.parse = new UrlParseFactory(mainFrame.getuPanel().getParseName()).createParse();			
 		pageNumber = 1;
 		Container container = this.getContentPane();
 		container.setLayout(null);
@@ -92,7 +95,7 @@ public class PageFrame extends MyFrame {
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
-						if(nowPage!=null){							
+						if (nowPage != null) {
 							nowPage.downAllThread();
 						}
 					}
@@ -104,6 +107,7 @@ public class PageFrame extends MyFrame {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				mainFrame.showUPanel();
+				mainFrame.setPageFrame(null);
 			}
 
 			@Override
@@ -132,8 +136,7 @@ public class PageFrame extends MyFrame {
 								pageNumber = Integer.parseInt(p);
 								if (pageNumber <= 1100) {
 									buttonPanel.remove(pageField);
-									pageNumberLabel.setText(Integer
-											.toString(pageNumber));
+									pageNumberLabel.setText(Integer.toString(pageNumber));
 									buttonPanel.add(pageNumberLabel);
 									repaint();
 									isNumber = true;
@@ -210,7 +213,7 @@ public class PageFrame extends MyFrame {
 		// 1.获得page对象
 		// 若加载过直接获得此page
 		nowPage = pages.get(pageNumber);
-		if (nowPage == null) {			
+		if (nowPage == null) {
 			nowPage = parse.getPage(pageNumber, mainFrame);
 			pages.put(pageNumber, nowPage);
 		}

@@ -1,4 +1,4 @@
-package com.duan.utils;
+package com.duan.parent;
 
 import javax.swing.JFrame;
 

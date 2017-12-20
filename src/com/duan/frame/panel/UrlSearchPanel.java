@@ -1,4 +1,4 @@
-package com.duan.frame;
+package com.duan.frame.panel;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -13,8 +13,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.duan.bean.DownBar;
+import com.duan.frame.MainFrame;
+import com.duan.parent.PageFrame;
+import com.duan.parent.RButton;
 import com.duan.utils.Constant;
-import com.duan.utils.RButton;
 import com.duan.utils.StrUtils;
 
 public class UrlSearchPanel extends JPanel {

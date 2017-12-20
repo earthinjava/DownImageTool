@@ -13,18 +13,25 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 
 import com.duan.bean.ChildPage;
+import com.duan.frame.panel.FishPanel;
+import com.duan.frame.panel.InputPanel;
+import com.duan.frame.panel.OptionMenu;
+import com.duan.frame.panel.TaskPanel;
+import com.duan.frame.panel.UrlSearchPanel;
 import com.duan.intface.DownFile;
+import com.duan.parent.PageFrame;
 import com.duan.utils.Constant;
 
 public class MainFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
+	private PageFrame pageFrame;
+	private ClearFrame clearFrame;
+	private SplitFrame splitFrame;
 	private TaskPanel taskJPanel;
 	private FishPanel fishJPanel;
 	private UrlSearchPanel uPanel;
 	private OptionMenu optionMenu;
-	private PageFrame pageFrame;
-	private ClearFrame clearFrame;
 	private InputPanel inputPanel;
 	private Map< URL,ChildPage> waitDownLoadChildPage;
 	private List<URL> waitDownLoadUrls;
@@ -230,6 +237,14 @@ public class MainFrame extends JFrame {
 			return true;
 		}
 		return false;
+	}
+
+	public SplitFrame getSplitFrame() {
+		return splitFrame;
+	}
+
+	public void setSplitFrame(SplitFrame splitFrame) {
+		this.splitFrame = splitFrame;
 	}
 
 }

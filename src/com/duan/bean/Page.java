@@ -19,13 +19,12 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import com.duan.core.FileParse;
-import com.duan.download.ImageDownLoad;
+import com.duan.down.downloader.ImageDownLoad;
 import com.duan.frame.ImageShowFrame;
 import com.duan.frame.MainFrame;
 import com.duan.intface.DownFile;
 import com.duan.intface.Parse;
-import com.duan.utils.Constant;
+import com.duan.utils.DownFileUtils;
 import com.duan.utils.StrUtils;
 import com.duan.utils.UUIDutils;
 
@@ -37,8 +36,8 @@ public class Page {
 	private MainFrame mainFrame;
 	private Parse parse;
 
-	public Page(int pageNumber, List<ChildPage> childPages, String url,
-			MainFrame mainFrame, Parse parse) {
+	public Page(int pageNumber, List<ChildPage> childPages, String url, MainFrame mainFrame,
+			Parse parse) {
 		this.pageNumber = pageNumber;
 		this.url = url;
 		this.childPages = childPages;
@@ -55,11 +54,11 @@ public class Page {
 		}
 
 		@Override
-		public void paint(Graphics g) {
-			super.paint(g);
-			g.drawImage(img, 0, 0, 120, 140, this);
+		protected void paintComponent(Graphics g) {
+			// TODO Auto-generated method stub
+			super.paintComponent(g);
+			g.drawImage(img, 0, 0, 120 - 110, 140 - 120, this);
 		}
-
 	}
 
 	/**
@@ -88,13 +87,28 @@ public class Page {
 			try {
 				// 若没下载过预览图则重新下载
 				if (img == null) {
-					url = new URL(childPage.getPreviewImgUrl());
-					DownFile file = FileParse.getDownFile(UUIDutils.getID(),
-							Constant.SAVE_PATH + "/catitle", url);
-					if (new ImageDownLoad().download(file)) {
-						img = new ImageIcon(file.getPath()).getImage();
-						childPage.setPreviewImagePath(file.getPath());
+					// 若是91网站没有预览图地址，则先解析地址，在获得预览图及下载地址
+					if (childPage.getPreviewImgUrl() == null) {
+						url = new URL(childPage.getUrl());
+						List<String> imgPaths = parse.getPathsFromUrl(url);
+						if (imgPaths != null && imgPaths.size() != 0) {
+							childPage.setPreviewImgUrl(imgPaths.get(0));
+							for (String path : imgPaths) {
+								childPage.getImgUrlPaths().add(path);
+							}
+						}
 					}
+					// 若是桃花网站有预览图地址则直接下载预览图
+					if (childPage.getPreviewImgUrl() != null) {
+						url = new URL(childPage.getPreviewImgUrl());
+						DownFile file = DownFileUtils.getDownFile(UUIDutils.getID(),
+								mainFrame.getSavePath() + "/catitle", url);
+						if (new ImageDownLoad().download(file)) {
+							img = new ImageIcon(file.getPath()).getImage();
+							childPage.setPreviewImagePath(file.getPath());
+						}
+					}
+
 				}
 				JPanel imgPanel = new ImagePanel(img);
 				imgPanel.addMouseListener(new MouseAdapter() {
@@ -104,8 +118,7 @@ public class Page {
 					public void mouseClicked(MouseEvent e) {
 						if (img != null) {
 							if (isf == null || !isf.isOpen()) {
-								isf = new ImageShowFrame(img, childPage
-										.getDownFiles());
+								isf = new ImageShowFrame(img,childPage.getDownFilesPath());
 								isf.addMouseListener(new MouseAdapter() {
 									@Override
 									public void mouseClicked(MouseEvent e) {
@@ -125,7 +138,7 @@ public class Page {
 				childJPanel.add(imgPanel);
 				childJPanel.repaint();
 			} catch (MalformedURLException e1) {
-				System.out.println("url格式错误");
+				System.out.println("预览图url格式错误");
 			}
 		}
 	}
@@ -158,8 +171,7 @@ public class Page {
 			ChildPage cPage = getChildPages().get(i);
 			// 2.1设置标题
 			String title = cPage.getTitle();
-			JLabel titleJLabel = new JLabel(StrUtils.getShortStr(title, 15),
-					JLabel.CENTER);
+			JLabel titleJLabel = new JLabel(StrUtils.getShortStr(title, 15), JLabel.CENTER);
 			titleJLabel.setSize(120, 20);
 			titleJLabel.setLocation(0, 0);
 			titleJLabel.addMouseListener(new MouseAdapter() {
@@ -171,15 +183,13 @@ public class Page {
 						desktop.browse(new URI(cPage.getUrl()));
 					} catch (IOException e1) {
 					} catch (URISyntaxException e1) {
-						mainFrame.getTaskJPanel().getMsgArea()
-								.append(cPage.getUrl() + "格式错误！\r\n");
+						mainFrame.getTaskJPanel().getMsgArea().append(cPage.getUrl() + "格式错误！\r\n");
 					}
 				}
 			});
 			childJPanels.get(i).add(titleJLabel);
 			// 2.2下载预览图
-			new DownImgThread(childJPanels.get(i), getChildPages().get(i))
-					.start();
+			new DownImgThread(childJPanels.get(i), getChildPages().get(i)).start();
 			// 2.3设置下载按钮
 			JButton downButton = cPage.getDownButton();
 			downButton.setSize(80, 20);
@@ -204,6 +214,7 @@ public class Page {
 
 		}
 	}
+
 	/**
 	 * 单线程下载所有
 	 */

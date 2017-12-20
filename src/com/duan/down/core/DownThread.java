@@ -1,4 +1,4 @@
-package com.duan.core;
+package com.duan.down.core;
 
 import java.net.URL;
 
@@ -7,12 +7,13 @@ import javax.swing.JLabel;
 
 import com.duan.bean.ChildPage;
 import com.duan.bean.DownBar;
-import com.duan.download.ImageDownLoad;
-import com.duan.download.VideoDownLoad;
+import com.duan.down.downloader.ImageDownLoad;
+import com.duan.down.downloader.VideoDownLoad;
 import com.duan.frame.MainFrame;
 import com.duan.intface.DownFile;
 import com.duan.intface.DownLoad;
 import com.duan.utils.Constant;
+import com.duan.utils.DownFileUtils;
 import com.duan.utils.StrUtils;
 
 public class DownThread implements Runnable {
@@ -124,7 +125,7 @@ public class DownThread implements Runnable {
 	public void run() {
 		try {
 			// 连接网络获得contenttype
-			file = FileParse.getDownFile(fileName, savePath, url);
+			file = DownFileUtils.getDownFile(fileName, savePath, url);
 			nameLabel.setText(file.getSizeKB());
 			// 无法获得文件删除此文件
 			if (file == null) {
@@ -143,7 +144,7 @@ public class DownThread implements Runnable {
 				// 下载失败尝试重新连接
 				int tryagain = 1;
 				while (tryagain <= 3) {
-					file = FileParse.getDownFile(fileName, savePath, url);
+					file = DownFileUtils.getDownFile(fileName, savePath, url);
 					nameLabel.setText(file.getSizeKB());
 					// 无法获得文件删除此文件
 					if (file == null) {

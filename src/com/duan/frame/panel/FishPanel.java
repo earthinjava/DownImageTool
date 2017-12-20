@@ -1,4 +1,4 @@
-package com.duan.frame;
+package com.duan.frame.panel;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -10,6 +10,8 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
+import com.duan.frame.ImageShowFrame;
+import com.duan.frame.MainFrame;
 import com.duan.intface.DownFile;
 
 public class FishPanel extends JPanel {
@@ -31,7 +33,7 @@ public class FishPanel extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (showPanelimage != null) {
-					if (isf == null) {
+					if (isf == null) {						
 						isf = new ImageShowFrame(finishFiles);
 					} else {
 						isf.dispose();

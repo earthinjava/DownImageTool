@@ -1,4 +1,4 @@
-package com.duan.frame;
+package com.duan.frame.panel;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -16,8 +16,11 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import com.duan.core.UrlParse;
-import com.duan.utils.RButton;
+import com.duan.factory.PageFrameFactory;
+import com.duan.factory.UrlParseFactory;
+import com.duan.frame.MainFrame;
+import com.duan.parent.PageFrame;
+import com.duan.parent.RButton;
 
 public class InputPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -63,8 +66,7 @@ public class InputPanel extends JPanel {
 						mainFrame.addTaskNumber(1);
 						mainFrame.getTaskJPanel().notifyDownAdd();
 					} catch (MalformedURLException e1) {
-						msgArea.append(pathField.getText().trim()
-								+ "：URL格式错误！\r\n");
+						msgArea.append(pathField.getText().trim() + "：URL格式错误！\r\n");
 					}
 					pathField.setText("");
 					pathField.requestFocus();
@@ -73,11 +75,10 @@ public class InputPanel extends JPanel {
 			} else {
 				if (path.length() != 0) {
 					// 若要求解析，则继续解析
-					if (mainFrame.getPageFrame() == null
-							&& path.equalsIgnoreCase("parse")) {
+					if (mainFrame.getPageFrame() == null && path.equalsIgnoreCase("parse")) {
 						pathField.setText("");
 						mainFrame.hideUPanel();
-						PageFrame pageFrame = new PageFrame(mainFrame);
+						PageFrame pageFrame = PageFrameFactory.creatPageFrame(mainFrame);
 						mainFrame.setPageFrame(pageFrame);
 						new Thread(new Runnable() {
 							@Override
@@ -96,17 +97,26 @@ public class InputPanel extends JPanel {
 							@Override
 							public void run() {
 								// 调用图片url解析器
-								UrlParse urlParse = new UrlParse(msgArea,
+								UrlParseFactory urlParseFactory = new UrlParseFactory(
 										mainFrame.getuPanel().getParseName());
-								List<URL> urlList = urlParse
-										.getPathsFromUrl(path);
-								if (urlList != null) {
-									mainFrame.addTaskNumber(urlList.size());
-									mainFrame.getWaitDownLoadUrls().addAll(
-											urlList);
-									mainFrame.getTaskJPanel().notifyDownAdd();
-								} else {
-									msgArea.append("无法解析到资源路径！\r\n");
+								URL url;
+								try {
+									url = new URL(path);
+									List<String> urlList = urlParseFactory.createParse()
+											.getPathsFromUrl(url);
+									if (urlList != null) {
+										mainFrame.addTaskNumber(urlList.size());
+										for (String urlstr : urlList) {										
+											URL u=new URL(urlstr);										
+											mainFrame.getWaitDownLoadUrls().add(u);
+										}
+										mainFrame.getTaskJPanel().notifyDownAdd();
+									} else {
+										msgArea.append("无法解析到资源路径！\r\n");
+									}
+								} catch (MalformedURLException e) {
+									msgArea.append(path+"URL格式错误！\r\n");
+									e.printStackTrace();
 								}
 							}
 						}).start();

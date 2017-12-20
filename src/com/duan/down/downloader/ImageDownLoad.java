@@ -1,4 +1,4 @@
-package com.duan.download;
+package com.duan.down.downloader;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -24,7 +24,7 @@ public class ImageDownLoad implements DownLoad {
 	@Override
 	public synchronized void startDown() {
 		wait = false;
-		notify(); 
+		notify();
 	}
 
 	@Override
@@ -58,10 +58,14 @@ public class ImageDownLoad implements DownLoad {
 					}
 				}
 				if (downLength < fileLength || downLength == 0) {
-					msgArea.append(file.getFile().getName() + "文件未下载完\r\n");
+					if (file != null && file.getFile() != null
+							&& file.getFile().getName() != null) {
+						msgArea.append(file.getFile().getName() + "文件未下载完\r\n");
+					}
 					return false;
 				} else {
-					if(file.getFile()!=null&&file.getFile().getName()!=null){						
+					if (file != null && file.getFile() != null
+							&& file.getFile().getName() != null) {
 						msgArea.append(file.getFile().getName() + "下载完成\r\n");
 					}
 					return true;
@@ -71,7 +75,7 @@ public class ImageDownLoad implements DownLoad {
 				i++;
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			}finally {
+			} finally {
 				closeStream(fos, is);
 			}
 		}

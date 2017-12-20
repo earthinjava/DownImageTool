@@ -1,4 +1,4 @@
-package com.duan.utils;
+package com.duan.parent;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -15,15 +15,13 @@ import java.awt.geom.RoundRectangle2D;
 import javax.swing.JButton;
 
 import com.duan.frame.ImageShowFrame;
-import com.duan.intface.FrameListener;
 
 public class RButton extends JButton {
 	private static final long serialVersionUID = 39082560987930759L;
 	public static final Color BUTTON_COLOR1 = new Color(205, 255, 205);
-	public static final Color BUTTON_COLOR2 = new Color(51, 154, 47);	
+	public static final Color BUTTON_COLOR2 = new Color(51, 154, 47);
 	public static final Color BUTTON_FOREGROUND_COLOR = Color.WHITE;
 	private boolean hover;
-	private FrameListener frame;
 	private int arc;
 
 	public boolean isHover() {
@@ -51,7 +49,7 @@ public class RButton extends JButton {
 	}
 
 	public RButton(String name) {
-		arc=8;
+		arc = 8;
 		this.setText(name);
 		setFont(new Font("system", Font.PLAIN, 12));
 		setBorderPainted(false);
@@ -65,31 +63,25 @@ public class RButton extends JButton {
 				hover = true;
 				repaint();
 			}
+
 			@Override
-			public void mouseExited(MouseEvent e) {			
-				 if (frame!=null&&frame.isOpen()) {
-					setForeground(BUTTON_FOREGROUND_COLOR);
-					hover = true;
-					repaint();
-				}else{
-					setForeground(BUTTON_COLOR2);
-					hover = false;
-					repaint();
-				}
+			public void mouseExited(MouseEvent e) {
+				setForeground(BUTTON_COLOR2);
+				hover = false;
+				repaint();
 			}
-		
+
 		});
 
-	}	
-	
+	}
+
 	public RButton(String string, ImageShowFrame frame) {
 		this(string);
-		this.frame = frame;
-
 	}
+
 	public RButton(String string, int arc) {
 		this(string);
-		this.arc=arc;
+		this.arc = arc;
 	}
 
 	@Override
@@ -125,12 +117,9 @@ public class RButton extends JButton {
 		g2d.setPaint(p1);
 		g2d.drawRoundRect(0, 0, w - 1, h - 1, arc, arc);
 		g2d.setPaint(p2);
-		g2d.drawRoundRect(1, 1, w - 3, h - 3, arc-2, arc-2);
+		g2d.drawRoundRect(1, 1, w - 3, h - 3, arc - 2, arc - 2);
 		g2d.dispose();
 		super.paintComponent(g);
 	}
-
-	public void addFrameListener(FrameListener frame) {
-		this.frame = frame;
-	}
+	
 }

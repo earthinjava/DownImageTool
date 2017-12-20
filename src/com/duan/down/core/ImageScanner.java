@@ -1,4 +1,4 @@
-package com.duan.utils;
+package com.duan.down.core;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,6 +14,7 @@ import java.util.Map;
 import javax.swing.JLabel;
 
 import com.duan.bean.DownBar;
+import com.duan.utils.UUIDutils;
 
 public class ImageScanner {	
 	private JLabel msgLabel;
@@ -32,42 +33,76 @@ public class ImageScanner {
 	public List<File> findFiles(String path){
 		File file = new File(path);
 		File[] files = file.listFiles();
-		List<File> fileList = new ArrayList<>();
-		for (File f : files) {
-			if (!f.isDirectory()) {
-				fileList.add(f);
-				msgLabel.setText("扫描到文件" + fileList.size() + "个");
+		List<File> fileList=null;
+		if(files!=null){			
+			fileList = new ArrayList<>();
+			for (File f : files) {
+				if (!f.isDirectory()) {
+					fileList.add(f);
+					if(msgLabel!=null){					
+						msgLabel.setText("扫描到文件" + fileList.size() + "个");
+					}
+				}
 			}
-		}
-		if (fileList.size() == 0) {		
-			msgLabel.setText("文件夹为空！");			
+			if (fileList.size() == 0) {		
+				msgLabel.setText("文件夹为空！");			
+			}
+		}else{
+			msgLabel.setText("文件夹不存在！");
 		}
 		return fileList;
 	}
 	
+	public void spiltFile(String path,List<File> fileList, DownBar downBar,int number){		
+		String SavePath=path+"/"+UUIDutils.getID();
+		if(fileList!=null){			
+			for(int i=0,j=0;i<fileList.size();i++,j++){
+				if(j==number){
+					SavePath=path+"/"+UUIDutils.getID();
+					j=0;
+				}
+				File savePathFile=new File(SavePath);
+				if(!savePathFile.exists()){
+					savePathFile.mkdirs();
+				}
+				String fileName=fileList.get(i).getName();
+				String newSave=SavePath+"/"+fileName;
+				File newFile=new File(newSave);
+				msgLabel.setText("正在移动第" + (i+1) + "个，共" + fileList.size()+ "个");
+				fileList.get(i).renameTo(newFile);
+				double progress=0.0;
+				if(fileList.size()!=0){				
+					progress = (double)(i+1) / (double) fileList.size();
+				}
+				downBar.setProgress(progress);
+			}		
+		}
+	}
 	
 	public void findSameAndSmallFiles(List<File> fileList, DownBar downBar){	
 		int i = 0;
-		for (File f : fileList) {
-			i++;
-			msgLabel.setText("正在比较第" + i + "个，共" + fileList.size()+ "个");
-			double progress=0.0;
-			if(fileList.size()!=0){				
-				progress = (double) i / (double) fileList.size();
-			}
-			downBar.setProgress(progress);
-			MdFile mdFile = this.getMD5(f);
-			if (mdFile!=null) {	
-				if(saveFiles.containsKey(mdFile)){
-					sameFiles.add(f);
-				}else if(mdFile.length<=1024*20){
-					smallFiles.add(f);
-				}else{
-					saveFiles.put(mdFile, f);
-				}				
-			}
-		}				
-		msgLabel.setText("找到" + sameFiles.size() + "个重复文件，"+ smallFiles.size() + "个小文件！");		
+		if(fileList!=null){
+			for (File f : fileList) {
+				i++;
+				msgLabel.setText("正在比较第" + i + "个，共" + fileList.size()+ "个");
+				double progress=0.0;
+				if(fileList.size()!=0){				
+					progress = (double) i / (double) fileList.size();
+				}
+				downBar.setProgress(progress);
+				MdFile mdFile = this.getMD5(f);
+				if (mdFile!=null) {	
+					if(saveFiles.containsKey(mdFile)){
+						sameFiles.add(f);
+					}else if(mdFile.length<=1024*20){
+						smallFiles.add(f);
+					}else{
+						saveFiles.put(mdFile, f);
+					}				
+				}
+			}				
+			msgLabel.setText("找到" + sameFiles.size() + "个重复文件，"+ smallFiles.size() + "个小文件！");		
+		}
 	}	
 	
 	
@@ -78,7 +113,7 @@ public class ImageScanner {
 		for (File df : sameFiles) {
 			if(df.delete()){
 				j++;
-				msgLabel.setText("删除成功:" + j + "/" + delNumber);
+				msgLabel.setText("删除:" + j + "/" + delNumber);
 			}			
 			double progress=0.0;
 			if(delNumber!=0){				
@@ -89,7 +124,7 @@ public class ImageScanner {
 		for (File df : smallFiles) {
 			if(df.delete()){
 				j++;
-				msgLabel.setText("删除成功:" + j + "/" + delNumber);
+				msgLabel.setText("删除:" + j + "/" + delNumber);
 			}			
 			double progress=0.0;
 			if(delNumber!=0){				

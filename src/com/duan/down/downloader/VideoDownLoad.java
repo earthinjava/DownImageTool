@@ -1,4 +1,4 @@
-package com.duan.download;
+package com.duan.down.downloader;
 
 import javax.swing.JTextArea;
 

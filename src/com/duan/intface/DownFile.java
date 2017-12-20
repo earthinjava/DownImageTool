@@ -9,13 +9,9 @@ import java.util.Date;
 public interface DownFile {
 
 	public String getContentType() ;
-
-
-
 	public void setContentType(String contentType);
 	public File getFile();
 	public String getShortName(int number);
-
 	public String getTime();
 	public String getName();
 
