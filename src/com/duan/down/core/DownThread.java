@@ -108,7 +108,7 @@ public class DownThread implements Runnable {
 			downBar.setProgressColor(Constant.FINISHI_COLOR);
 			begButton.setEnabled(false);
 			String path = file.getPath();			
-			fininshFilesPath.add(path);
+			fininshFilesPath.add(path);		
 			Thread.sleep(200);
 			mainFrame.getTaskJPanel().removeDownThread(this);
 		} catch (InterruptedException e) {

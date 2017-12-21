@@ -4,22 +4,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
+import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 import com.duan.frame.ClearFrame;
 import com.duan.frame.MainFrame;
+import com.duan.frame.SettingFrame;
 import com.duan.frame.SplitFrame;
 
 public class OptionMenu extends JMenuBar {
 
 	private static final long serialVersionUID = -2325130940338460721L;
 	private JMenu parseNaMenu;
+	private JFrame settingFrame;
 
 	public OptionMenu(MainFrame mainFrame) {
 		super();
@@ -40,50 +40,28 @@ public class OptionMenu extends JMenuBar {
 		JMenuItem taohuaMenuItem = new JMenuItem("TaoHua");
 		JMenuItem pornMenuItem = new JMenuItem("91Porn");
 		JMenuItem normalMenuItem = new JMenuItem("Normal");
-		JMenuItem savePathMenuItem = new JMenuItem("savePath");
-		JMenuItem splitNumberMenuItem = new JMenuItem("splitNumber");
+		//JMenuItem savePathMenuItem = new JMenuItem("savePath");
+		//JMenuItem splitNumberMenuItem = new JMenuItem("splitNumber");
 		// JMenuItem pornMenuItem = new JMenuItem("91Porn");
 		// JMenuItem normalMenuItem = new JMenuItem("Normal");
 		parseMenu.add(taohuaMenuItem);
 		parseMenu.add(pornMenuItem);
 		parseMenu.add(normalMenuItem);
-		settingMenu.add(savePathMenuItem);
-		settingMenu.add(splitNumberMenuItem);
+		//settingMenu.add(savePathMenuItem);
+		//settingMenu.add(splitNumberMenuItem);
 		add(parseMenu);
 		add(clearMenu);
 		add(splitMenu);
-		add(settingMenu);
-
-		savePathMenuItem.addActionListener(new ActionListener() {
+		add(settingMenu);		
+		settingMenu.addMouseListener(new MouseAdapter() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser jfc = new JFileChooser();
-				jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				jfc.showDialog(new JLabel(), "选择");
-				File file = jfc.getSelectedFile();
-				if (file != null && file.isDirectory()) {
-					mainFrame.setSavePath(file.getAbsolutePath());
-					mainFrame.getTaskJPanel().getMsgArea()
-							.append("保存路径已更改为：\r\n" + mainFrame.getSavePath() + "\r\n");
-				}
+			public void mouseClicked(MouseEvent e) {
+				super.mouseClicked(e);
+				if (settingFrame == null) {
+					settingFrame = new SettingFrame(mainFrame);
+				} 
 			}
-		});
-		
-		splitNumberMenuItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				//设置分割数量
-				/*JFileChooser jfc = new JFileChooser();
-				jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				jfc.showDialog(new JLabel(), "选择");
-				File file = jfc.getSelectedFile();
-				if (file != null && file.isDirectory()) {
-					mainFrame.setSavePath(file.getAbsolutePath());
-					mainFrame.getTaskJPanel().getMsgArea()
-							.append("保存路径已更改为：\r\n" + mainFrame.getSavePath() + "\r\n");
-				}*/
-			}
-		});
+		});		
 		clearMenu.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -136,6 +114,14 @@ public class OptionMenu extends JMenuBar {
 
 	public void setParseNaMenu(JMenu parseNaMenu) {
 		this.parseNaMenu = parseNaMenu;
+	}
+
+	public JFrame getSettingFrame() {
+		return settingFrame;
+	}
+
+	public void setSettingFrame(JFrame settingFrame) {
+		this.settingFrame = settingFrame;
 	}
 
 }

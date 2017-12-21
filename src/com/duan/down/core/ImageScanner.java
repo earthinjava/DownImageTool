@@ -79,7 +79,7 @@ public class ImageScanner {
 		}
 	}
 	
-	public void findSameAndSmallFiles(List<File> fileList, DownBar downBar){	
+	public void findSameAndSmallFiles(List<File> fileList, DownBar downBar,int delSize){	
 		int i = 0;
 		if(fileList!=null){
 			for (File f : fileList) {
@@ -94,7 +94,7 @@ public class ImageScanner {
 				if (mdFile!=null) {	
 					if(saveFiles.containsKey(mdFile)){
 						sameFiles.add(f);
-					}else if(mdFile.length<=1024*20){
+					}else if(mdFile.length<=1024*delSize){
 						smallFiles.add(f);
 					}else{
 						saveFiles.put(mdFile, f);

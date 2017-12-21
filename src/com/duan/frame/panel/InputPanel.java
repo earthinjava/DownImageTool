@@ -77,7 +77,7 @@ public class InputPanel extends JPanel {
 					// 若要求解析，则继续解析
 					if (mainFrame.getPageFrame() == null && path.equalsIgnoreCase("parse")) {
 						pathField.setText("");
-						mainFrame.hideUPanel();
+						mainFrame.hideUPanel();						
 						PageFrame pageFrame = PageFrameFactory.creatPageFrame(mainFrame);
 						mainFrame.setPageFrame(pageFrame);
 						new Thread(new Runnable() {
@@ -97,8 +97,7 @@ public class InputPanel extends JPanel {
 							@Override
 							public void run() {
 								// 调用图片url解析器
-								UrlParseFactory urlParseFactory = new UrlParseFactory(
-										mainFrame.getuPanel().getParseName());
+								UrlParseFactory urlParseFactory = new UrlParseFactory(mainFrame);
 								URL url;
 								try {
 									url = new URL(path);
@@ -106,8 +105,8 @@ public class InputPanel extends JPanel {
 											.getPathsFromUrl(url);
 									if (urlList != null) {
 										mainFrame.addTaskNumber(urlList.size());
-										for (String urlstr : urlList) {										
-											URL u=new URL(urlstr);										
+										for (String urlstr : urlList) {
+											URL u = new URL(urlstr);
 											mainFrame.getWaitDownLoadUrls().add(u);
 										}
 										mainFrame.getTaskJPanel().notifyDownAdd();
@@ -115,7 +114,7 @@ public class InputPanel extends JPanel {
 										msgArea.append("无法解析到资源路径！\r\n");
 									}
 								} catch (MalformedURLException e) {
-									msgArea.append(path+"URL格式错误！\r\n");
+									msgArea.append(path + "URL格式错误！\r\n");
 									e.printStackTrace();
 								}
 							}

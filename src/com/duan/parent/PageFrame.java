@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -24,7 +25,7 @@ import com.duan.factory.UrlParseFactory;
 import com.duan.frame.MainFrame;
 import com.duan.intface.Parse;
 
-public class PageFrame extends MyFrame {
+public class PageFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private Map<Integer, Page> pages;
 	private List<JPanel> childJPanels;
@@ -44,7 +45,7 @@ public class PageFrame extends MyFrame {
 		isNumber = true;
 		pages = new HashMap<Integer, Page>();
 		childJPanels = new ArrayList<JPanel>();
-		this.parse = new UrlParseFactory(mainFrame.getuPanel().getParseName()).createParse();			
+		this.parse = new UrlParseFactory(mainFrame).createParse();			
 		pageNumber = 1;
 		Container container = this.getContentPane();
 		container.setLayout(null);

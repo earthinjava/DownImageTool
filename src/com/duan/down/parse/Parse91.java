@@ -14,16 +14,20 @@ import com.duan.bean.ChildPage;
 import com.duan.bean.Page;
 import com.duan.frame.MainFrame;
 import com.duan.intface.Parse;
-import com.duan.utils.Constant;
 import com.duan.utils.UrlConn;
 
 public class Parse91 implements Parse {
 	private String htmlContent;
+	private MainFrame mainFrame;
 
 	/**
 	 * 获得网页内容
 	 * 
 	 */
+	public Parse91(MainFrame mainFrame) {
+		this.mainFrame = mainFrame;
+	}
+
 	private String getHtmlContent(URLConnection conn) {
 		StringBuilder contextBuilder = new StringBuilder();
 		InputStream is = null;
@@ -70,7 +74,7 @@ public class Parse91 implements Parse {
 					pt = pt.substring(1);
 					pt = pt.substring(0, pt.indexOf("\""));
 					if (!pt.contains("http:") && !pt.contains("https:")) {
-						pt = Constant.PORN_91URL + pt;
+						pt = mainFrame.getPorn91Host() + pt;
 					}
 					imgPaths.add(pt);
 				}
@@ -83,7 +87,7 @@ public class Parse91 implements Parse {
 
 	@Override
 	public Page getPage(int pageNumber, MainFrame mainFrame) {
-		String url = Constant.PORN_91URL + "forumdisplay.php?fid=19&page=" + pageNumber;
+		String url = mainFrame.getPorn91Host() + "forumdisplay.php?fid=19&page=" + pageNumber;
 		URLConnection con = UrlConn.getUrlConn(url);
 		return new Page(pageNumber, getChildPages(con, pageNumber), url, mainFrame, this);
 	}
@@ -109,7 +113,7 @@ public class Parse91 implements Parse {
 						String title = p.substring(p.indexOf(">"));
 						href = href.substring(6);
 						href = href.substring(0, href.indexOf("\""));
-						href = Constant.PORN_91URL + href;
+						href = mainFrame.getPorn91Host() + href;
 						title = title.substring(1);
 						title = title.substring(0, title.indexOf("</a>")).trim();
 						// 先查找数据看能不能找到，找的则不在创建

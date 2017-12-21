@@ -9,86 +9,35 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.List;
 
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 
-import com.duan.intface.DownFile;
-import com.duan.parent.MyFrame;
-import com.duan.utils.Constant;
-
-public class ImageShowFrame extends MyFrame  {
+public class ImageShowFrame extends JFrame {
 
 	private static final long serialVersionUID = -1130457258995441174L;
 	private int width;
 	private int height;
-	private DownFile file;
 	private Image image;
-	private int screenWidth = (int) (Constant.SCREEN_WIDTH * 0.9);
-	private int screenHeigth = (int) (Constant.SCREEN_HEIGHT * 0.9);
-	private boolean isOpen;
-	private JPanel showJPanel;	
-	private Image  showImage;	
-	
-	/**
-	 * page预览窗口的对象构造
-	 * 
-	 * @param image
-	 */
-	public ImageShowFrame(Image img,List<String> finishedFilesPath) {	
-		showImage=img;
-		image = img;		
-		setSize(image);
-		isOpen = true;
-		setCenterLoaction();
-		Container con = this.getContentPane();
-		showJPanel = new ImagePanel();
-		con.add(showJPanel);
-		setResizable(false);
-		setUndecorated(true);
-		getRootPane().setWindowDecorationStyle(JRootPane.NONE);
-		isOpen = true;
-		setVisible(true);
-		addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				isOpen = false;
-			}
-		});		
-		addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				int number = finishedFilesPath.indexOf(getFile());
-				if (e.getKeyCode() == KeyEvent.VK_RIGHT
-						&& number < finishedFilesPath.size() - 1) {
-					String imgPath=finishedFilesPath.get(number + 1);					
-					refresh(imgPath);
-				} else if (e.getKeyCode() == KeyEvent.VK_LEFT && number > 0) {
-					String imgPath = finishedFilesPath.get(number - 1);
-					refresh(imgPath);
-				} else if (e.getKeyCode() == KeyEvent.VK_SPACE
-						&& number < finishedFilesPath.size() - 1) {
-					String imgPath=finishedFilesPath.get(number + 1);
-					refresh(imgPath);
-				}else if (e.getKeyCode() == KeyEvent.VK_LEFT && number == 0) {					
-					refresh(showImage);
-				}
-			}
-		});
-	}
-	
+	private JPanel showJPanel;
+	private int index;
+	private double zoom;
+	private boolean isbig;
+
 	/**
 	 * 预览窗口的对象构造
 	 * 
 	 * @param image
 	 */
 	public ImageShowFrame(List<String> finishedFilesPath) {
-		image = new ImageIcon(finishedFilesPath.get(finishedFilesPath.size()-1)).getImage();		
+		image = new ImageIcon(finishedFilesPath.get(finishedFilesPath.size() - 1)).getImage();
+		if (finishedFilesPath.size() != 0) {
+			index = finishedFilesPath.size() - 1;
+		}
 		setSize(image);
-		isOpen = true;
 		setCenterLoaction();
 		Container con = this.getContentPane();
 		showJPanel = new ImagePanel();
@@ -96,73 +45,59 @@ public class ImageShowFrame extends MyFrame  {
 		setResizable(false);
 		setUndecorated(true);
 		getRootPane().setWindowDecorationStyle(JRootPane.NONE);
-		isOpen = true;
-		setVisible(true);
-		addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				isOpen = false;
-			}
-		});	
-		addMouseListener(new MouseAdapter() {
+		addMouseListener(new MouseAdapter() {			
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				int number = finishedFilesPath.indexOf(getFile());
-				int sfWidth = getWidth();
-				int mouseX = e.getX();
-				if (mouseX >= sfWidth / 2 && number < finishedFilesPath.size() - 1) {
-					String nextfilePath = finishedFilesPath.get(number + 1);
-					refresh(nextfilePath);
-				} else if (mouseX <= sfWidth / 2 && number > 0) {
-					String lastfile = finishedFilesPath.get(number - 1);
-					refresh(lastfile);
+				if (e.getButton() == MouseEvent.BUTTON1) {
+					int sfWidth = getWidth();
+					int mouseX = e.getX();
+					if (mouseX >= sfWidth / 2 && index < finishedFilesPath.size() - 1) {
+						String nextfilePath = finishedFilesPath.get(index + 1);
+						index++;
+						refresh(nextfilePath);
+					} else if (mouseX <= sfWidth / 2 && index > 0) {
+						String lastfile = finishedFilesPath.get(index - 1);
+						index--;
+						refresh(lastfile);
+					}
+				} else if (!isbig) {
+					width *= 2;
+					height *= 2;
+					setSize(width, height);
+					setCenterLoaction();
+					isbig = true;
+				} else if (isbig) {
+					width = (width / 2);
+					height = (height / 2);
+					setSize(width, height);
+					setCenterLoaction();
+					isbig = false;
 				}
+
 			}
 
 		});
 		addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				int number = finishedFilesPath.indexOf(getFile());
-				if (e.getKeyCode() == KeyEvent.VK_RIGHT
-						&& number < finishedFilesPath.size() - 1) {
-					String nextfile = finishedFilesPath.get(number + 1);
+				if (e.getKeyCode() == KeyEvent.VK_RIGHT && index < finishedFilesPath.size() - 1) {
+					String nextfile = finishedFilesPath.get(index + 1);
+					index++;
 					refresh(nextfile);
-				} else if (e.getKeyCode() == KeyEvent.VK_LEFT && number > 0) {
-					String lastfile = finishedFilesPath.get(number - 1);
+				} else if (e.getKeyCode() == KeyEvent.VK_LEFT && index > 0) {
+					String lastfile = finishedFilesPath.get(index - 1);
+					index--;
 					refresh(lastfile);
 				} else if (e.getKeyCode() == KeyEvent.VK_SPACE
-						&& number < finishedFilesPath.size() - 1) {
-					String nextfile = finishedFilesPath.get(number + 1);
+						&& index < finishedFilesPath.size() - 1) {
+					String nextfile = finishedFilesPath.get(index + 1);
+					index--;
 					refresh(nextfile);
 				}
 			}
 		});
-	}
-
-	/**
-	 * pageFrame的预览
-	 * 
-	 * @param image
-	 */
-	public ImageShowFrame(Image image) {
-		this.image = image;
-		setSize(image);
-		isOpen = true;
-		setCenterLoaction();
-		Container con = this.getContentPane();
-		showJPanel = new ImagePanel();
-		con.add(showJPanel);
-		setResizable(false);
-		setUndecorated(true);
-		getRootPane().setWindowDecorationStyle(JRootPane.NONE);
-		isOpen = true;
 		setVisible(true);
-		addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				isOpen = false;
-			}
-		});
-	}	
+	}
 
 	/**
 	 * 根据图片文件设置窗口大小
@@ -171,50 +106,16 @@ public class ImageShowFrame extends MyFrame  {
 		if (image != null) {
 			int imgWidth = image.getWidth(null);
 			int imgHeight = image.getHeight(null);
-
-			if (imgWidth <= 400 && imgHeight <= 400) {
-				double zoom = ((400.00) / (double) (imgHeight)) < ((400.00) / (double) (imgWidth))
+			width = imgWidth;
+			height = imgHeight;
+			if (width <= 400 && height <= 400) {
+				zoom = ((400.00) / (double) (imgHeight)) < ((400.00) / (double) (imgWidth))
 						? ((400.00) / (double) (imgHeight)) : ((400.00) / (double) (imgWidth));
-				imgWidth *= zoom;
-				imgHeight *= zoom;
-			}
-
-			if (imgWidth > screenWidth && imgHeight <= screenHeigth) {
-				double zoom = ((screenWidth) / (double) (imgWidth));
-				width = screenWidth;
-				height = (int) (imgHeight * zoom);
-			} else if (imgHeight > screenHeigth && imgWidth <= screenWidth) {
-				double zoom = ((screenHeigth) / (double) (imgHeight));
-				height = screenHeigth;
-				width = (int) (imgWidth * zoom);
-			} else if (imgHeight > screenHeigth && imgWidth > screenWidth) {
-				double zoom = ((screenHeigth) / (double) (imgHeight)) < ((screenWidth)
-						/ (double) (imgWidth)) ? ((screenHeigth) / (double) (imgHeight))
-								: ((screenWidth) / (double) (imgWidth));
-				width = (int) (imgWidth * zoom);
-				height = (int) (imgHeight * zoom);
-			} else {
-				width = imgWidth;
-				height = imgHeight;
+				width *= zoom;
+				height *= zoom;
 			}
 			setSize(width, height);
 		}
-	}
-
-	public boolean isOpen() {
-		return isOpen;
-	}
-
-	public void setOpen(boolean isOpen) {
-		this.isOpen = isOpen;
-	}
-
-	public DownFile getFile() {
-		return file;
-	}
-
-	public void setFile(DownFile file) {
-		this.file = file;
 	}
 
 	class ImagePanel extends JPanel {
@@ -239,38 +140,12 @@ public class ImageShowFrame extends MyFrame  {
 		setLocation(x, y);
 	}
 
-	/**
-	 * 根据传入文件更新窗口
-	 * 
-	 * @param downFile
-	 */
-	public void refresh(DownFile downFile) {
-		setFile(downFile);
-		image = new ImageIcon(downFile.getPath()).getImage();
-		setTitle(downFile.getName() + "   " + downFile.getTime() + "   " + downFile.getSizeKB());
-		setSize(image);
-		setCenterLoaction();
-		repaint();
-	}
-	
-	public void refresh(String imgPath) {		
+	public void refresh(String imgPath) {
 		image = new ImageIcon(imgPath).getImage();
 		setSize(image);
 		setCenterLoaction();
+		isbig = false;
 		repaint();
-	}
-	
-	public void refresh(Image img) {
-		setSize(showImage);
-		image =showImage;
-		setCenterLoaction();
-		repaint();
-	}
-
-	@Override
-	public void dispose() {
-		super.dispose();
-		setOpen(false);		
 	}
 
 }

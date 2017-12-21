@@ -23,7 +23,6 @@ import com.duan.bean.DownBar;
 import com.duan.down.core.DownThread;
 import com.duan.frame.MainFrame;
 import com.duan.parent.RButton;
-import com.duan.utils.Constant;
 import com.duan.utils.UUIDutils;
 
 public class TaskPanel extends JPanel {
@@ -93,7 +92,7 @@ public class TaskPanel extends JPanel {
 			while (true) {
 				try {
 					// 判断下载线程是否已满，未满则添加下载
-					if (downThreads.size() < Constant.MAX_DOWN_NUM
+					if (downThreads.size() < mainFrame.getDownNum()
 							&& mainFrame.getWaitDownLoadUrls().size() != 0) {
 						ChildPage childPage = mainFrame
 								.getWaitDownLoadChildPage().get(

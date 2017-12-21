@@ -36,7 +36,7 @@ public class SplitFrame extends JFrame {
 		super();
 		this.mainFrame = mainFrame;
 		setTitle("Split");
-		splitNumber=1500;
+		splitNumber=mainFrame.getSplitNum();
 		setSize(400, 100);
 		setLocation(Toolkit.getDefaultToolkit().getScreenSize().width / 2 - getWidth() / 2,
 				Toolkit.getDefaultToolkit().getScreenSize().height / 2 - getHeight() / 2);

@@ -36,12 +36,23 @@ public class MainFrame extends JFrame {
 	private List<URL> waitDownLoadUrls;
 	private int taskNumber;
 	private List<String> finishedFilesPath;
-	private String savePath;
 	private boolean uPanelIsHide;
-
+	private String savePath;
+	private int downNum;
+	private int delSize;
+	private int splitNum;
+	private String porn91Host;
+	private String taoHuaHost;
+	
+	
 	public MainFrame() {
 		setLayout(null);
 		savePath = Constant.SAVE_PATH;
+		downNum=Constant.MAX_DOWN_NUM;
+		delSize=Constant.DEL_SIZE;
+		splitNum=Constant.SPLIT_NUM;
+		porn91Host=Constant.PORN_91URL.trim()+"/";
+		taoHuaHost=Constant.TAOHUAURL.trim()+"/";		
 		finishedFilesPath = new CopyOnWriteArrayList<String>();
 		setWaitDownLoadChildPage(new HashMap< URL,ChildPage>());
 		setWaitDownLoadUrls(new CopyOnWriteArrayList<URL>());
@@ -205,6 +216,14 @@ public class MainFrame extends JFrame {
 		return finishedFilesPath;
 	}
 
+	public OptionMenu getOptionMenu() {
+		return optionMenu;
+	}
+
+	public void setOptionMenu(OptionMenu optionMenu) {
+		this.optionMenu = optionMenu;
+	}
+
 	public void setFinishedFilesPath(List<String> finishedFilesPath) {
 		this.finishedFilesPath = finishedFilesPath;
 	}
@@ -221,6 +240,7 @@ public class MainFrame extends JFrame {
 
 	public void setSavePath(String savePath) {
 		this.savePath = savePath;
+		getTaskJPanel().getMsgArea().append("保存地址："+savePath+"\r\n");
 	}
 
 	public double getProgress() {
@@ -244,6 +264,56 @@ public class MainFrame extends JFrame {
 
 	public void setSplitFrame(SplitFrame splitFrame) {
 		this.splitFrame = splitFrame;
+	}
+
+	public String getTaoHuaHost() {
+		return taoHuaHost;
+	}
+
+	public void setTaoHuaHost(String taoHuaHost) {
+		this.taoHuaHost = taoHuaHost;
+		getTaskJPanel().getMsgArea()
+		.append("桃花主页:" +taoHuaHost+"\r\n");
+	}
+
+	public String getPorn91Host() {
+		return porn91Host;
+	}
+
+	public void setPorn91Host(String porn91Host) {
+		this.porn91Host = porn91Host;
+		getTaskJPanel().getMsgArea()
+		.append("91主页:" +porn91Host+"\r\n");
+	}
+
+	public int getDownNum() {
+		return downNum;
+	}
+
+	public void setDownNum(int downNum) {
+		this.downNum = downNum;
+		getTaskJPanel().getMsgArea()
+		.append("同时下载:" +downNum+"\r\n");
+	}
+
+	public int getDelSize() {
+		return delSize;
+	}
+
+	public void setDelSize(int delSize) {
+		this.delSize = delSize;
+		getTaskJPanel().getMsgArea()
+		.append("删除大小:" +delSize+"KB\r\n");
+	}
+
+	public int getSplitNum() {
+		return splitNum;
+	}
+
+	public void setSplitNum(int splitNum) {
+		this.splitNum = splitNum;
+		getTaskJPanel().getMsgArea()
+		.append("分割数量:" +splitNum+"\r\n");
 	}
 
 }

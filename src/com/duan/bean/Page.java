@@ -55,7 +55,6 @@ public class Page {
 
 		@Override
 		protected void paintComponent(Graphics g) {
-			// TODO Auto-generated method stub
 			super.paintComponent(g);
 			g.drawImage(img, 0, 0, 120 - 110, 140 - 120, this);
 		}
@@ -117,8 +116,8 @@ public class Page {
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						if (img != null) {
-							if (isf == null || !isf.isOpen()) {
-								isf = new ImageShowFrame(img,childPage.getDownFilesPath());
+							if (isf == null ) {
+								isf = new ImageShowFrame(childPage.getDownFilesPath());
 								isf.addMouseListener(new MouseAdapter() {
 									@Override
 									public void mouseClicked(MouseEvent e) {

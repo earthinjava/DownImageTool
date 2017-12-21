@@ -43,7 +43,7 @@ public class Porn91PageFrame extends PageFrame {
 		isNumber = true;
 		pages = new HashMap<Integer, Page>();
 		childJPanels = new ArrayList<JPanel>();
-		this.parse = new UrlParseFactory(mainFrame.getuPanel().getParseName()).createParse();
+		this.parse = new UrlParseFactory(mainFrame).createParse();
 		pageNumber = 1;
 		Container container = this.getContentPane();
 		container.setLayout(null);

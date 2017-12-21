@@ -25,7 +25,6 @@ import com.duan.utils.Constant;
 public class ClearFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private MainFrame mainFrame;
 	private JLabel msgLabel;
 	private DownBar downBar;
 	private ImageScanner imageScanner;
@@ -33,7 +32,6 @@ public class ClearFrame extends JFrame {
 
 	public ClearFrame(MainFrame mainFrame) {
 		super();
-		this.mainFrame = mainFrame;
 		setTitle("ClearUp");
 		setSize(400, 100);
 		setLocation(Toolkit.getDefaultToolkit().getScreenSize().width / 2 - getWidth() / 2,
@@ -69,7 +67,7 @@ public class ClearFrame extends JFrame {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				start();
+				filelist = imageScanner.findFiles(mainFrame.getSavePath());
 			}
 		}).start();
 		scanButton.addActionListener(new ActionListener() {
@@ -80,7 +78,7 @@ public class ClearFrame extends JFrame {
 					new Thread(new Runnable() {						
 						@Override
 						public void run() {
-							imageScanner.findSameAndSmallFiles(filelist, downBar);
+							imageScanner.findSameAndSmallFiles(filelist, downBar,mainFrame.getDelSize());
 						}
 					}).start();
 				} else {
@@ -103,10 +101,6 @@ public class ClearFrame extends JFrame {
 		});
 	}
 
-	public void start() {
-		filelist = imageScanner.findFiles(mainFrame.getSavePath());
-	}	
-	
 	class ProPanel extends JPanel{
 		
 		private static final long serialVersionUID = 1L;

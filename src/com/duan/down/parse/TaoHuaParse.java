@@ -14,13 +14,16 @@ import com.duan.bean.ChildPage;
 import com.duan.bean.Page;
 import com.duan.frame.MainFrame;
 import com.duan.intface.Parse;
-import com.duan.utils.Constant;
 import com.duan.utils.UrlConn;
 
 public class TaoHuaParse implements Parse {
 
 	private String htmlContent;
-
+	private MainFrame mainFrame;
+	public TaoHuaParse(MainFrame mainFrame) {
+		this.mainFrame=mainFrame;
+	}
+	
 	/**
 	 * ���html�ı�����
 	 * 
@@ -74,7 +77,7 @@ public class TaoHuaParse implements Parse {
 					pt = pt.substring(0, pt.indexOf("\""));
 					if (!pt.contains("http:") && !pt.contains("https:")) {
 						pt = pt.substring(1);
-						pt = Constant.TAOHUAURL + pt;
+						pt = mainFrame.getTaoHuaHost()+ pt;
 					}
 					System.out.println(pt);
 					imgPaths.add(pt);
@@ -91,7 +94,7 @@ public class TaoHuaParse implements Parse {
 	 * 
 	 */
 	public Page getPage(int pageNumber, MainFrame mainFrame) {
-		String url = Constant.TAOHUAURL+"forum-42-" + pageNumber + ".html";
+		String url = mainFrame.getTaoHuaHost()+"forum-42-" + pageNumber + ".html";
 		URLConnection con = UrlConn.getUrlConn(url);
 		return new Page(pageNumber, getChildPages(con, pageNumber), url,
 				mainFrame, this);
@@ -120,7 +123,7 @@ public class TaoHuaParse implements Parse {
 						String title = p.substring(p.indexOf("title="));
 						href = href.substring(2);
 						href = href.substring(0, href.indexOf("\""));
-						href = Constant.TAOHUAURL + href;
+						href = mainFrame.getTaoHuaHost() + href;
 						title = title.substring(7);
 						title = title.substring(0, title.indexOf("\""));
 						// 先查找数据看能不能找到，找的则不在创建

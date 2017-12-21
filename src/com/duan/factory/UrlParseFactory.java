@@ -3,24 +3,21 @@ package com.duan.factory;
 import com.duan.down.parse.NormalParse;
 import com.duan.down.parse.Parse91;
 import com.duan.down.parse.TaoHuaParse;
+import com.duan.frame.MainFrame;
 import com.duan.intface.Parse;
 
 public class UrlParseFactory {
 
 	private Parse parse;
 
-	public UrlParseFactory(String parseName) {
-		this.parse = getParse(parseName);
-	}
-
-	// 可以改为反射获取
-	private Parse getParse(String parseName) {
+	public UrlParseFactory(MainFrame mainFrame) {
+		String parseName = mainFrame.getuPanel().getParseName();
 		if (parseName.equalsIgnoreCase("taohua")) {
-			return new TaoHuaParse();
+			parse = new TaoHuaParse(mainFrame);
 		} else if (parseName.equalsIgnoreCase("91porn")) {
-			return new Parse91();
+			parse = new Parse91(mainFrame);
 		} else {
-			return new NormalParse();
+			parse = new NormalParse();
 		}
 	}
 
